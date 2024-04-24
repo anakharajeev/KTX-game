@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="img/favicon.svg">
+    <title>KTX</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/aos.css">
+
+</head>
+<body>
+
+
+
+    <section class="bg">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="qstn-content">
+                        <div class="top-logos" data-aos="zoom-in" data-aos-duration="1000">
+                            <img src="img/logo.svg" alt="" class="veuz">
+                            <img src="img/ktx-logo.svg" alt="" class="ktx">
+                        </div>
+                     
+                        <h1 data-aos="zoom-in" data-aos-duration="1000">Ready to test your<span> brain?</span></h1> 
+
+                        <div id="app">
+                            <div class="wheel">
+                              <div class="inner">
+                                <div class="slice" v-for="prize in prizes" :key="prize">
+                                  <span class="prize">#{{prize}}</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="wheel-outer"></div>
+                            <svg id="svg-dotted" viewBox="0 0 100 100">
+                              <circle id="circle-dotted" cx="50" cy="50" r="40" />
+                            </svg>
+                            <svg id="svg-arrow" xmlns="http://www.w3.org/2000/svg">
+                              <path style="fill:#ff2e52; stroke:rgb(18 23 33); stroke-width:4; stroke-linejoin:round" d="M 81.540414,49.378716 H 121.51935 L 101.4866,69.420346 Z" />
+                            </svg>
+                            <button @click="spin" :disabled="activeBtn">SPIN</button>
+                          </div>
+                          </div>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+
+
+
+    <script src="https://kit.fontawesome.com/16b0815225.js" crossorigin="anonymous"></script>
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+    <script src="js/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+<script>
+    new Vue ({
+      el: "#app",
+      data() {
+        return {
+          prizes: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
+          activeBtn: false,
+          deg: 0
+        };
+      },
+      methods: {
+        spin() {
+          this.activeBtn = true;
+          setTimeout(() => (this.activeBtn = false), 5100);
+  
+          let spins = Math.floor(Math.random() * 7) + 9; //perform between 9 and 15 spins
+          console.log("spins: " + spins);
+  
+          let wheelAngle = Math.floor(Math.random() * 12) * 30; //set wheel angle rotation
+          console.log("wheelAngle: " + wheelAngle);
+  
+          let sectorAngle = Math.floor(Math.random() * 14) + 1; //set sector angle rotation
+          sectorAngle *= Math.floor(Math.random() * 2) == 1 ? 1 : -1; //between -14deg and +14deg (28deg range of 30deg sector)
+          console.log("sectorAngle: " + sectorAngle);
+          this.deg += 360 * spins + wheelAngle + sectorAngle;
+          document.querySelector(
+            ".inner"
+          ).style.transform = `rotate(${this.deg}deg)`;
+  
+          setTimeout(() => (this.deg -= sectorAngle), 100); //reset sector angle rotation to avoid angle > +-44deg on next rotation
+  
+          let index = Math.floor((this.deg - sectorAngle) / 30) % 12; //get the prize
+          console.log("prize index:" + index);
+          console.log("you will win: " + this.prizes[index]);
+  
+          // Redirect to another page after 2 seconds
+          setTimeout(() => {
+            window.location.href = 'question.html';
+          }, 6000);
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
